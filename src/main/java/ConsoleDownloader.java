@@ -9,17 +9,19 @@ import stringArgsConverters.FileConverter;
 import stringArgsConverters.LimitSpeedConverter;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ConsoleDownloader {
 
     @Parameter(names="-n", validateWith = CheckThreadsNumber.class)
-    private int threadsNumber;
+    private static int threadsNumber;
     @Parameter(names="-o", validateWith = CheckDestFolder.class, converter = DestFolderConverter.class)
-    private String destFolder;
+    private static String destFolder;
     @Parameter(names="-l", validateWith = CheckLimitSpeed.class, converter = LimitSpeedConverter.class)
-    private int limitSpeed;
+    private static int limitSpeed;
     @Parameter(names="-f", validateWith = CheckSourceFile.class, converter = FileConverter.class)
-    private File sourceFile;
+    private static File sourceFile;
 
     public static void main(String[] args) {
         ConsoleDownloader main = new ConsoleDownloader();
@@ -31,7 +33,16 @@ public class ConsoleDownloader {
     }
 
     public void run() {
-        System.out.printf("%d %s %s %s", threadsNumber, destFolder, limitSpeed, sourceFile);
+
+        DownloadController start = new DownloadController(new ArrayList<>());
+        SourceFileParser sourceFileMap = new SourceFileParser();
+
+        while(start.getListThreads().size()!=0){
+            for(Map.Entry<String, String> entry:sourceFileMap.parsedMap.entrySet()) {
+                start.initNewThread(entry.getKey(), entry.getValue());
+            }
+        }
+
     }
 
 }
