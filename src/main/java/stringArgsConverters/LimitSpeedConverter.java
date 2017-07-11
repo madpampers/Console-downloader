@@ -2,7 +2,7 @@ package stringArgsConverters;
 
 import com.beust.jcommander.IStringConverter;
 
-public class LimitSpeedConverter implements IStringConverter{
+public class LimitSpeedConverter implements IStringConverter<Integer>{
 
     @Override
     public Integer convert(String value) {
