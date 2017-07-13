@@ -9,8 +9,6 @@ import stringArgsConverters.FileConverter;
 import stringArgsConverters.LimitSpeedConverter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class ConsoleDownloader {
 
@@ -34,15 +32,23 @@ public class ConsoleDownloader {
 
     public void run() {
 
-        DownloadController start = new DownloadController(new ArrayList<>());
-        SourceFileParser sourceFileMap = new SourceFileParser();
+        SrcFileParser parser = new SrcFileParser(sourceFile);
+        parser.formLists();
 
-        while(start.getListThreads().size()!=0){
-            for(Map.Entry<String, String> entry:sourceFileMap.parsedMap.entrySet()) {
-                start.initNewThread(entry.getKey(), entry.getValue());
-            }
+        DownloadController controller = new DownloadController(
+                parser.getListUrls(),
+                parser.getListFileNames(),
+                threadsNumber,
+                destFolder);
+
+        controller.run();
+        try {
+            controller.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
-    }
+        System.out.println("Ура!" + controller.getTimeSpent());
 
+    }
 }
