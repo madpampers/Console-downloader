@@ -35,7 +35,7 @@ public class DownloadController extends Thread {
                 if ((threadArr[i] == null || !(threadArr[i].isAlive())) && count < listUrls.size()) {
                     threadArr[i] = new DownloadThreads(getNextUrl(count), getNextFileName(count), destFolder);
                     threadArr[i].start();
-                    System.out.println("запустили поток " + (count + 1));
+                    System.out.println("запустили поток " + i);
                     count++;
                 }
             }
